@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: mail-ms
+    app.kubernetes.io/version: '4eed8e1'
+  name: mail-ms
+  namespace: utils
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mail-ms
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mail-ms
+        app.kubernetes.io/version: '4eed8e1'
+    spec:
+      containers:
+        - name: mail-ms
+          image: registry.digitalocean.com/softmora/utils:mail-ms-4eed8e1
+
+          envFrom:
+            - secretRef:
+                name: rmq-connection-secret
+
+            - secretRef:
+                name: aws-ses-secret
+
+          resources:
+            limits:
+              cpu: 60m
+              memory: 96Mi
+            requests:
+              cpu: 40m
+              memory: 64Mi

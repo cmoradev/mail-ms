@@ -31,3 +31,50 @@ jobs:
       # Subir imagen al registry
       - name: 'Push image to DigitalOcean Container Registry'
         run: docker push registry.digitalocean.com/softmora/utils:mail-ms-${{ env.TAG }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    strategy:
+      matrix:
+        workspace:
+          - namespace: utils
+            deploy: mail-ms
+            container: mail-ms
+    steps:
+      # Checkout main branch with github task
+      - name: 'Checkout main'
+        uses: actions/checkout@v3
+      # Install doctl
+      - name: 'Install doctl'
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      # Declara la variable TAG
+      - name: 'Set TAG variable'
+        run: echo "TAG=$(echo $GITHUB_SHA | head -c7)" >> $GITHUB_ENV
+      # Log In to Kubernetes Cluster
+      - name: 'Save DigitalOcean kubeconfig with short-lived credentials'
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 kubemora
+      # Se asigna una nueva imagen
+      - name: 'Set new image in deployment'
+        run: kubectl set image deployment/${{ matrix.workspace.deploy }} ${{ matrix.workspace.container }}=registry.digitalocean.com/softmora/utils:mail-ms-${{ env.TAG }} -n ${{ matrix.workspace.namespace }}
+      # Create patch file
+      - name: 'Create patch file'
+        run: |
+          echo "
+          metadata:
+            labels:
+              app.kubernetes.io/version: '${{ env.TAG }}'
+          spec:
+            template:
+              metadata:
+                labels:
+                  app.kubernetes.io/version: '${{ env.TAG }}'
+          " > patch.yaml
+      # Apply patch file
+      - name: 'Apply version label patch'
+        run: kubectl patch deployment/${{ matrix.workspace.deploy }} -n ${{ matrix.workspace.namespace }} --patch-file patch.yaml
+      # Verify deployment
+      - name: Verify deployment
+        run: kubectl rollout status deployment/${{ matrix.workspace.deploy }} -n ${{ matrix.workspace.namespace }}
