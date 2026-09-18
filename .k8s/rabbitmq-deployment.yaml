@@ -1,0 +1,138 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-config
+  namespace: utils
+  labels:
+    app.kubernetes.io/name: rabbitmq
+data:
+  rabbitmq.conf: |
+    # Limites absolutos para evitar alarmas de memoria y bloqueo por falta de disco.
+    # Watermark de memoria: 230MiB dentro del limit de 384Mi (margen sobre el request de 256Mi).
+    vm_memory_high_watermark.absolute = 230MiB
+    # Minimo de 256MiB libre en el volumen de datos (PVC 1Gi).
+    disk_free_limit.absolute = 256MiB
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-headless
+  namespace: utils
+  labels:
+    app.kubernetes.io/name: rabbitmq
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app.kubernetes.io/name: rabbitmq
+  ports:
+    - name: amqp
+      port: 5672
+      targetPort: 5672
+      protocol: TCP
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+  namespace: utils
+  labels:
+    app.kubernetes.io/name: rabbitmq
+    app.kubernetes.io/version: '4.0.2-alpine'
+spec:
+  serviceName: rabbitmq-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: rabbitmq
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: rabbitmq
+        app.kubernetes.io/version: '4.0.2-alpine'
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:4.0.2-alpine
+
+          ports:
+            - name: amqp
+              containerPort: 5672
+              protocol: TCP
+
+          envFrom:
+            - secretRef:
+                name: rmq-cred-secret
+
+          resources:
+            requests:
+              cpu: 50m
+              memory: 256Mi
+            limits:
+              cpu: 250m
+              memory: 384Mi
+
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/rabbitmq
+            - name: config
+              mountPath: /etc/rabbitmq/rabbitmq.conf
+              subPath: rabbitmq.conf
+
+          # El arranque de RabbitMQ toma ~59s (ver rabbitqm-logs.txt: "Time to start RabbitMQ: 58697 ms").
+          # Se usa startupProbe para tolerar ese tiempo; liveness/readiness se aplican despues.
+          startupProbe:
+            tcpSocket:
+              port: 5672
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 36
+          livenessProbe:
+            tcpSocket:
+              port: 5672
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 6
+          readinessProbe:
+            tcpSocket:
+              port: 5672
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+      volumes:
+        - name: config
+          configMap:
+            name: rabbitmq-config
+
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          app.kubernetes.io/name: rabbitmq
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: nfs-rwx-storage
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+  namespace: utils
+  labels:
+    app.kubernetes.io/name: rabbitmq
+spec:
+  type: ClusterIP
+
+  selector:
+    app.kubernetes.io/name: rabbitmq
+
+  ports:
+    - name: amqp
+      port: 5672
+      targetPort: 5672
+      protocol: TCP
