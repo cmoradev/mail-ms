@@ -40,6 +40,9 @@ WORKDIR /usr/app
 COPY --from=builder /usr/app/node_modules ./node_modules
 # 4. Copy the dist folder from the build stage
 COPY --from=builder /usr/app/dist ./dist
+# Copy the repository templates
+COPY --from=builder /usr/app/templates ./templates
+
 # 5. Set the environment variable NODE_ENV to production
 ENV NODE_ENV=production
 # 6. Set the user to node
