@@ -1,0 +1,33 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types: [synchronize]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout main branch with github task
+      - name: 'Checkout main'
+        uses: actions/checkout@v3
+      # Install doctl
+      - name: 'Install doctl'
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      # Declara la variable TAG
+      - name: 'Set TAG variable'
+        run: echo "TAG=$(echo $GITHUB_SHA | head -c7)" >> $GITHUB_ENV
+      # Construir la imagen
+      - name: 'Build container image'
+        run: docker build -f dockerfile.prod -t registry.digitalocean.com/softmora/utils:mail-ms-${{ env.TAG }} .
+      # Log In to Registry
+      - name: 'Log in to DigitalOcean Container Registry with short-lived credentials'
+        run: doctl registry login --expiry-seconds 1200
+      # Subir imagen al registry
+      - name: 'Push image to DigitalOcean Container Registry'
+        run: docker push registry.digitalocean.com/softmora/utils:mail-ms-${{ env.TAG }}
