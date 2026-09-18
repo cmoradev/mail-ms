@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Warehouse order</title>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #f4f6f8; font-family: Arial, Helvetica, sans-serif; color: #1f2937;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f4f6f8; padding: 24px 0;">
+      <tr>
+        <td align="center">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px;">
+            <tr>
+              <td style="padding: 32px 32px 16px 32px;">
+                <h1 style="margin: 0; font-size: 20px; line-height: 1.4; color: #111827;">Warehouse order</h1>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding: 0 32px 16px 32px;">
+                <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.5;">
+                  {{#if recipientName}}Dear {{recipientName}}{{else}}Dear customer{{/if}},
+                </p>
+                <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.5;">
+                  We inform you that a new warehouse order has been generated{{#if issuerName}} by {{issuerName}}{{/if}}.
+                </p>
+                <p style="margin: 0; font-size: 15px; line-height: 1.5;">
+                  Attached you will find the document with the details of the order for your review.
+                </p>
+              </td>
+            </tr>
+
+            {{#if orderNumber}}
+              <tr>
+                <td style="padding: 0 32px 12px 32px;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px;">
+                    <tr>
+                      <td style="padding: 16px;">
+                        <p style="margin: 0; font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Order number</p>
+                        <p style="margin: 4px 0 0 0; font-size: 15px; color: #111827; font-weight: bold;">{{orderNumber}}</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            {{/if}}
+
+            {{#if orderDate}}
+              <tr>
+                <td style="padding: 0 32px 12px 32px;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px;">
+                    <tr>
+                      <td style="padding: 16px;">
+                        <p style="margin: 0; font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Order date</p>
+                        <p style="margin: 4px 0 0 0; font-size: 15px; color: #111827;">{{orderDate}}</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            {{/if}}
+
+            {{#if warehouse}}
+              <tr>
+                <td style="padding: 0 32px 16px 32px;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px;">
+                    <tr>
+                      <td style="padding: 16px;">
+                        <p style="margin: 0; font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Warehouse</p>
+                        <p style="margin: 4px 0 0 0; font-size: 15px; color: #111827;">{{warehouse}}</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            {{/if}}
+
+            <tr>
+              <td style="padding: 8px 32px 24px 32px;">
+                <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.5;">
+                  Please review the attached information and, should any adjustments be required, do not hesitate to contact us.
+                </p>
+                {{#if supportEmail}}
+                  <p style="margin: 0; font-size: 15px; line-height: 1.5;">
+                    If you have any questions, please reach us at <a href="mailto:{{supportEmail}}" style="color: #2563eb; text-decoration: none;">{{supportEmail}}</a> and we will be glad to help.
+                  </p>
+                {{/if}}
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding: 16px 32px 32px 32px; border-top: 1px solid #e5e7eb;">
+                <p style="margin: 0; font-size: 13px; color: #6b7280; line-height: 1.5;">
+                  This message is automatically generated as a result of the warehouse order creation{{#if issuerName}} by {{issuerName}}{{/if}}.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

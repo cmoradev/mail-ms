@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CFDI issuance notification</title>
+    <title>Orden de almacén</title>
   </head>
   <body style="margin: 0; padding: 0; background-color: #f4f6f8; font-family: Arial, Helvetica, sans-serif; color: #1f2937;">
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f4f6f8; padding: 24px 0;">
@@ -12,32 +12,32 @@
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px;">
             <tr>
               <td style="padding: 32px 32px 16px 32px;">
-                <h1 style="margin: 0; font-size: 20px; color: #111827;">Your digital tax receipt (CFDI) is ready</h1>
+                <h1 style="margin: 0; font-size: 20px; line-height: 1.4; color: #111827;">Orden de almacén</h1>
               </td>
             </tr>
 
             <tr>
               <td style="padding: 0 32px 16px 32px;">
                 <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.5;">
-                  {{#if recipientName}}Dear {{recipientName}}{{else}}Dear customer{{/if}},
+                  {{#if recipientName}}Estimado/a {{recipientName}}{{else}}Estimado/a cliente{{/if}},
                 </p>
                 <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.5;">
-                  Thank you for your recent purchase{{#if issuerName}} with {{issuerName}}{{/if}}. We confirm that your payment has been processed successfully and that the corresponding Comprobante Fiscal Digital por Internet (CFDI) has been issued.
+                  Le informamos que se ha generado una nueva orden en almacén{{#if issuerName}} por parte de {{issuerName}}{{/if}}.
                 </p>
-                <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.5;">
-                  Attached to this email you will find the <strong>XML</strong> and <strong>PDF</strong> versions of the CFDI for your records and download.
+                <p style="margin: 0; font-size: 15px; line-height: 1.5;">
+                  Encontrará adjunto el documento con los detalles de la orden para su revisión.
                 </p>
               </td>
             </tr>
 
-            {{#if folio}}
+            {{#if orderNumber}}
               <tr>
                 <td style="padding: 0 32px 12px 32px;">
                   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px;">
                     <tr>
                       <td style="padding: 16px;">
-                        <p style="margin: 0; font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Folio</p>
-                        <p style="margin: 4px 0 0 0; font-size: 15px; color: #111827; font-weight: bold;">{{folio}}</p>
+                        <p style="margin: 0; font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Número de orden</p>
+                        <p style="margin: 4px 0 0 0; font-size: 15px; color: #111827; font-weight: bold;">{{orderNumber}}</p>
                       </td>
                     </tr>
                   </table>
@@ -45,14 +45,14 @@
               </tr>
             {{/if}}
 
-            {{#if uuid}}
+            {{#if orderDate}}
               <tr>
                 <td style="padding: 0 32px 12px 32px;">
                   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px;">
                     <tr>
                       <td style="padding: 16px;">
-                        <p style="margin: 0; font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">CFDI UUID</p>
-                        <p style="margin: 4px 0 0 0; font-size: 13px; color: #111827; word-break: break-all;">{{uuid}}</p>
+                        <p style="margin: 0; font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Fecha de la orden</p>
+                        <p style="margin: 4px 0 0 0; font-size: 15px; color: #111827;">{{orderDate}}</p>
                       </td>
                     </tr>
                   </table>
@@ -60,29 +60,14 @@
               </tr>
             {{/if}}
 
-            {{#if issueDate}}
-              <tr>
-                <td style="padding: 0 32px 12px 32px;">
-                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px;">
-                    <tr>
-                      <td style="padding: 16px;">
-                        <p style="margin: 0; font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Issue date</p>
-                        <p style="margin: 4px 0 0 0; font-size: 15px; color: #111827;">{{issueDate}}</p>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            {{/if}}
-
-            {{#if total}}
+            {{#if warehouse}}
               <tr>
                 <td style="padding: 0 32px 16px 32px;">
                   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px;">
                     <tr>
                       <td style="padding: 16px;">
-                        <p style="margin: 0; font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Total</p>
-                        <p style="margin: 4px 0 0 0; font-size: 15px; color: #111827; font-weight: bold;">{{total}}{{#if currency}} {{currency}}{{/if}}</p>
+                        <p style="margin: 0; font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Almacén</p>
+                        <p style="margin: 4px 0 0 0; font-size: 15px; color: #111827;">{{warehouse}}</p>
                       </td>
                     </tr>
                   </table>
@@ -93,11 +78,11 @@
             <tr>
               <td style="padding: 8px 32px 24px 32px;">
                 <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.5;">
-                  We recommend keeping these files as part of your accounting records and presenting them whenever required by the corresponding tax authority.
+                  Por favor revise la información adjunta y, en caso de requerir ajustes, comuníquese con nosotros.
                 </p>
                 {{#if supportEmail}}
                   <p style="margin: 0; font-size: 15px; line-height: 1.5;">
-                    If you have any questions or do not receive the attachments, please reach us at <a href="mailto:{{supportEmail}}" style="color: #2563eb; text-decoration: none;">{{supportEmail}}</a> and we will be glad to help.
+                    Para cualquier consulta, escríbanos a <a href="mailto:{{supportEmail}}" style="color: #2563eb; text-decoration: none;">{{supportEmail}}</a> y con gusto le atenderemos.
                   </p>
                 {{/if}}
               </td>
@@ -106,7 +91,7 @@
             <tr>
               <td style="padding: 16px 32px 32px 32px; border-top: 1px solid #e5e7eb;">
                 <p style="margin: 0; font-size: 13px; color: #6b7280; line-height: 1.5;">
-                  This message is automatically generated as a result of your CFDI issuance{{#if issuerName}} by {{issuerName}}{{/if}}.
+                  Este mensaje es generado automáticamente con motivo de la creación de la orden de almacén{{#if issuerName}} por parte de {{issuerName}}{{/if}}.
                 </p>
               </td>
             </tr>

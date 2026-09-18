@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment receipt</title>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #f4f6f8; font-family: Arial, Helvetica, sans-serif; color: #1f2937;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f4f6f8; padding: 24px 0;">
+      <tr>
+        <td align="center">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px;">
+            <tr>
+              <td style="padding: 32px 32px 16px 32px;">
+                <h1 style="margin: 0; font-size: 20px; line-height: 1.4; color: #111827;">Payment receipt</h1>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding: 0 32px 16px 32px;">
+                <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.5;">
+                  {{#if recipientName}}Dear {{recipientName}}{{else}}Dear customer{{/if}},
+                </p>
+                <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.5;">
+                  We confirm that we have received your payment successfully{{#if issuerName}} from {{issuerName}}{{/if}}.
+                </p>
+                <p style="margin: 0; font-size: 15px; line-height: 1.5;">
+                  Attached is your payment receipt in <strong>PDF</strong> format for your records.
+                </p>
+              </td>
+            </tr>
+
+            {{#if amount}}
+              <tr>
+                <td style="padding: 0 32px 12px 32px;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px;">
+                    <tr>
+                      <td style="padding: 16px;">
+                        <p style="margin: 0; font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Amount</p>
+                        <p style="margin: 4px 0 0 0; font-size: 15px; color: #111827; font-weight: bold;">{{amount}}{{#if currency}} {{currency}}{{/if}}</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            {{/if}}
+
+            {{#if paymentDate}}
+              <tr>
+                <td style="padding: 0 32px 12px 32px;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px;">
+                    <tr>
+                      <td style="padding: 16px;">
+                        <p style="margin: 0; font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Payment date</p>
+                        <p style="margin: 4px 0 0 0; font-size: 15px; color: #111827;">{{paymentDate}}</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            {{/if}}
+
+            {{#if reference}}
+              <tr>
+                <td style="padding: 0 32px 16px 32px;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px;">
+                    <tr>
+                      <td style="padding: 16px;">
+                        <p style="margin: 0; font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Reference</p>
+                        <p style="margin: 4px 0 0 0; font-size: 15px; color: #111827;">{{reference}}</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            {{/if}}
+
+            <tr>
+              <td style="padding: 8px 32px 24px 32px;">
+                <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.5;">
+                  We recommend keeping this receipt as evidence of the transaction performed.
+                </p>
+                {{#if supportEmail}}
+                  <p style="margin: 0; font-size: 15px; line-height: 1.5;">
+                    If you have any questions, please contact us at <a href="mailto:{{supportEmail}}" style="color: #2563eb; text-decoration: none;">{{supportEmail}}</a> and we will be glad to help.
+                  </p>
+                {{/if}}
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding: 16px 32px 32px 32px; border-top: 1px solid #e5e7eb;">
+                <p style="margin: 0; font-size: 13px; color: #6b7280; line-height: 1.5;">
+                  This message is automatically generated upon receipt of your payment{{#if issuerName}} by {{issuerName}}{{/if}}.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
